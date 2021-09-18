@@ -1,0 +1,14 @@
+apiVersion: 0.1.0
+targets:
+  - name: my-target
+    prompt:
+      type: override
+      override: "\e[01;31m[test]my-target:\e[01;34m\w\e[0m\$ "
+    startDir: ~/test-dir
+    blocks:
+      - type: aws_profile
+        profile: my-profile
+      - type: kubeconfig
+        kubeconfig: ~/.kube/config
+    env:
+      CUSTOM_ENV: value
