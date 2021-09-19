@@ -17,7 +17,8 @@ fn main() {
             name: "test".to_string(),
             post_init: Some(PostInit{
                 prompt: Prompt::Builtin(BuiltinPrompt { prefix: "pivot".to_string() }),
-                start_dir: None,
+                // start_dir: None,
+                start_dir: Some("~/Development".to_string()),
             }),
             blocks: vec![
                 Block::AwsProfile(AwsProfileBlock {

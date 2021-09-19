@@ -23,6 +23,9 @@ impl Switcher {
 
         if let Some(post_init) = target.post_init {
             cmd.set_ps1(target_name, &post_init.prompt);
+            if let Some(start_dir) = post_init.start_dir {
+                cmd.set_start_dir(&start_dir);
+            }
         }
         cmd.run().map_err(Error::from)
     }

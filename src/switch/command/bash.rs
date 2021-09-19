@@ -5,6 +5,7 @@ use crate::config::Prompt;
 
 const BASH_PATH: &str = "/bin/bash";
 const PS1_OVERRIDE_ENV: &str = "PS1_OVERRIDE";
+const START_DIR_ENV: &str = "START_DIR";
 
 pub struct BashSwitcherCommand {
     cmd: Command,
@@ -42,6 +43,10 @@ impl SwitcherCommand for BashSwitcherCommand {
             PS1_OVERRIDE_ENV,
             ps1
         );
+    }
+
+    fn set_start_dir(&mut self, start_dir: &str) {
+        self.cmd.env(START_DIR_ENV, start_dir);
     }
 
     fn run(&mut self) -> Result<()> {
