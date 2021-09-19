@@ -1,27 +1,30 @@
 pub mod aws;
+pub mod error;
 pub mod kubernetes;
 pub mod prompt;
 
-use serde::{Serialize, Deserialize};
 use crate::config::aws::AwsProfileBlock;
+use crate::config::error::{Error, Result};
 use crate::config::kubernetes::KubeconfigBlock;
+use crate::config::prompt::{BuiltinPrompt, OverridePrompt};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use crate::config::prompt::{OverridePrompt, BuiltinPrompt};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Config {
-    api_version: String,
-    targets: Vec<Target>,
+    pub api_version: String,
+    pub targets: Vec<Target>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Target {
-    prompt: Prompt,
-    start_dir: Option<String>,
-    blocks: Vec<Block>,
-    env: HashMap<String, String>,
+    pub name: String,
+    pub prompt: Prompt,
+    pub start_dir: Option<String>,
+    pub blocks: Vec<Block>,
+    pub env: HashMap<String, String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -36,4 +39,15 @@ pub enum Prompt {
 pub enum Block {
     AwsProfile(AwsProfileBlock),
     Kubeconfig(KubeconfigBlock),
+}
+
+impl Config {
+    pub fn get_target(&self, target_name: &str) -> Result<Target> {
+        for target in self.targets.iter() {
+            if target.name == target_name {
+                return Ok(target.clone());
+            }
+        }
+        Err(Error::MissingTarget(target_name.to_string()))
+    }
 }

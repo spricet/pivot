@@ -12,3 +12,4 @@ path = "src/cmd/pivot/main.rs"
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 structopt = "0.3"
+thiserror = "1.0"
