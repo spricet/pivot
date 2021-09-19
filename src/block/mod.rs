@@ -15,32 +15,17 @@ pub enum Block {
     Kubeconfig(KubeconfigBlock),
 }
 
-pub enum BlockHandler {
-    AwsProfile(AwsProfileBlockHandler),
-    Kubeconfig(KubeconfigBlockHandler),
+pub trait BlockHandler {
+    fn handle(&self, block: &Block, cmd: &mut Box<dyn SwitcherCommand>) -> Result<()>;
 }
 
-impl BlockHandler {
-    pub fn new(block: &Block) -> BlockHandler {
-        match block {
-            Block::AwsProfile(_) => BlockHandler::AwsProfile(AwsProfileBlockHandler {}),
-            Block::Kubeconfig(_) => BlockHandler::Kubeconfig(KubeconfigBlockHandler {}),
-        }
-    }
+pub struct BlockHandlerFactory;
 
-    pub fn handle(&self, block: &Block, cmd: &mut Box<dyn SwitcherCommand>) -> Result<()> {
-        match self {
-            BlockHandler::AwsProfile(aws) => {
-                if let Block::AwsProfile(ablock) = block {
-                    return aws.handle(ablock, cmd);
-                }
-            }
-            BlockHandler::Kubeconfig(kubeconfig) => {
-                if let Block::Kubeconfig(kblock) = block {
-                    return kubeconfig.handle(kblock, cmd);
-                }
-            }
+impl BlockHandlerFactory {
+    pub fn new(block: &Block) -> Box<dyn BlockHandler> {
+        match block {
+            Block::AwsProfile(_) => Box::new(AwsProfileBlockHandler::new()),
+            Block::Kubeconfig(_) => Box::new(KubeconfigBlockHandler::new()),
         }
-        Ok(())
     }
 }

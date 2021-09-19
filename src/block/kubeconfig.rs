@@ -1,6 +1,7 @@
 use crate::block::error::Result;
 use crate::switch::command::SwitcherCommand;
 use serde::{Deserialize, Serialize};
+use crate::block::{BlockHandler, Block};
 
 const KUBECONFIG_ENV: &str = "KUBECONFIG";
 
@@ -13,12 +14,22 @@ pub struct KubeconfigBlock {
 pub struct KubeconfigBlockHandler {}
 
 impl KubeconfigBlockHandler {
-    pub fn handle(
-        &self,
-        block: &KubeconfigBlock,
-        cmd: &mut Box<dyn SwitcherCommand>,
-    ) -> Result<()> {
-        cmd.env(KUBECONFIG_ENV, &block.kubeconfig);
+    pub fn new() -> KubeconfigBlockHandler {
+        KubeconfigBlockHandler{}
+    }
+}
+
+impl Default for KubeconfigBlockHandler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl BlockHandler for KubeconfigBlockHandler {
+    fn handle(&self, block: &Block, cmd: &mut Box<dyn SwitcherCommand>) -> Result<()> {
+        if let Block::Kubeconfig(kblock) = block {
+            cmd.env(KUBECONFIG_ENV, &kblock.kubeconfig);
+        }
         Ok(())
     }
 }
