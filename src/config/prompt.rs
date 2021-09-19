@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BuiltinPrompt {
-    pub prefix: Option<String>,
+    pub prefix: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -1,8 +1,10 @@
 use crate::switch::command::error::{Error, Result};
 use crate::switch::command::SwitcherCommand;
 use std::process::{Command, Stdio};
+use crate::config::Prompt;
 
 const BASH_PATH: &str = "/bin/bash";
+const PS1_OVERRIDE_ENV: &str = "PS1_OVERRIDE";
 
 pub struct BashSwitcherCommand {
     cmd: Command,
@@ -27,10 +29,18 @@ impl SwitcherCommand for BashSwitcherCommand {
         self.cmd.env(key, val);
     }
 
-    fn set_ps1(&mut self) {
+    fn set_ps1(&mut self, target_name: &str, prompt: &Prompt) {
+        let ps1 = match prompt {
+            Prompt::Builtin(builtin) => {
+                format!("\\e[01;31m[{prefix}]{target}:\\e[01;34m\\w\\e[0m\\$ ", prefix = builtin.prefix, target = target_name)
+            }
+            Prompt::Override(over) => {
+                over.prompt_override.clone()
+            }
+        };
         self.cmd.env(
-            "PS1_OVERRIDE",
-            "\\e[01;31m[test]my-target:\\e[01;34m\\w\\e[0m\\$ ",
+            PS1_OVERRIDE_ENV,
+            ps1
         );
     }
 

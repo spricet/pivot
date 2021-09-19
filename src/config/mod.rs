@@ -21,10 +21,16 @@ pub struct Config {
 #[serde(rename_all = "camelCase")]
 pub struct Target {
     pub name: String,
-    pub prompt: Prompt,
-    pub start_dir: Option<String>,
     pub blocks: Vec<Block>,
     pub env: HashMap<String, String>,
+    pub post_init: Option<PostInit>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "type", rename_all = "camelCase")]
+pub struct PostInit {
+    pub prompt: Prompt,
+    pub start_dir: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

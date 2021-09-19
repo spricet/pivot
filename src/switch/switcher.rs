@@ -21,7 +21,9 @@ impl Switcher {
             handler.handle(block, &mut cmd).map_err(Error::from)?;
         }
 
-        cmd.set_ps1();
+        if let Some(post_init) = target.post_init {
+            cmd.set_ps1(target_name, &post_init.prompt);
+        }
         cmd.run().map_err(Error::from)
     }
 }

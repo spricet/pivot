@@ -1,12 +1,13 @@
 use crate::switch::command::bash::BashSwitcherCommand;
 use crate::switch::command::error::Result;
+use crate::config::Prompt;
 
 pub mod bash;
 pub mod error;
 
 pub trait SwitcherCommand {
     fn env(&mut self, key: &str, val: &str);
-    fn set_ps1(&mut self);
+    fn set_ps1(&mut self, target_name: &str, prompt: &Prompt);
     fn run(&mut self) -> Result<()>;
 }
 
