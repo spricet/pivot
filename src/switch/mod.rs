@@ -1,6 +1,5 @@
-pub mod block;
+pub use switcher::Switcher;
+
 pub mod command;
 pub mod error;
 mod switcher;
-
-pub use switcher::Switcher;

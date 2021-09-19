@@ -1,9 +1,13 @@
 use crate::opt::PivotOpt;
-use pivot::config::aws::AwsProfileBlock;
-use pivot::config::kubernetes::KubeconfigBlock;
-use pivot::config::prompt::BuiltinPrompt;
-use pivot::config::{Block, Config, Prompt, Target, PostInit};
+use pivot::block::aws_profile::AwsProfileBlock;
+use pivot::block::kubeconfig::KubeconfigBlock;
+use pivot::block::Block;
+use pivot::config::v1alpha::Config;
+use pivot::pinit::PostInit;
+use pivot::prompt::builtin::BuiltinPrompt;
+use pivot::prompt::Prompt;
 use pivot::switch::Switcher;
+use pivot::target::Target;
 use structopt::StructOpt;
 
 mod opt;
@@ -12,11 +16,13 @@ fn main() {
     let opts: PivotOpt = PivotOpt::from_args();
 
     let cfg = Config {
-        api_version: "0.1.0".to_string(),
+        api_version: "v1".to_string(),
         targets: vec![Target {
             name: "test".to_string(),
-            post_init: Some(PostInit{
-                prompt: Prompt::Builtin(BuiltinPrompt { prefix: "pivot".to_string() }),
+            post_init: Some(PostInit {
+                prompt: Prompt::Builtin(BuiltinPrompt {
+                    prefix: "pivot".to_string(),
+                }),
                 // start_dir: None,
                 start_dir: Some("~/Development".to_string()),
             }),

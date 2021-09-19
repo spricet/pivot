@@ -1,15 +1,15 @@
 use thiserror::Error;
 
-pub type Result<T, E = Error> = std::result::Result<T, E>;
+pub type Result<T, E = SwitchError> = std::result::Result<T, E>;
 
 #[derive(Debug, Error)]
-pub enum Error {
+pub enum SwitchError {
     #[error("config error: {0}")]
-    ConfigError(#[from] crate::config::error::Error),
+    ConfigError(#[from] crate::config::error::ConfigError),
 
     #[error("block error: {0}")]
-    BlockError(#[from] crate::switch::block::error::Error),
+    BlockError(#[from] crate::block::error::BlockError),
 
     #[error("command error: {0}")]
-    CommandError(#[from] crate::switch::command::error::Error),
+    CommandError(#[from] crate::switch::command::error::CommandError),
 }

@@ -1,7 +1,7 @@
-use crate::config::Config;
-use crate::switch::block::BlockHandler;
+use crate::block::BlockHandler;
+use crate::config::v1alpha::Config;
 use crate::switch::command::SwitcherCommandFactory;
-use crate::switch::error::{Error, Result};
+use crate::switch::error::{Result, SwitchError};
 
 pub struct Switcher {
     config: Config,
@@ -13,12 +13,15 @@ impl Switcher {
     }
 
     pub fn switch(&self, target_name: &str) -> Result<()> {
-        let target = self.config.get_target(target_name).map_err(Error::from)?;
+        let target = self
+            .config
+            .get_target(target_name)
+            .map_err(SwitchError::from)?;
         let mut cmd = SwitcherCommandFactory::new_bash();
 
         for block in target.blocks.iter() {
             let handler = BlockHandler::new(block);
-            handler.handle(block, &mut cmd).map_err(Error::from)?;
+            handler.handle(block, &mut cmd).map_err(SwitchError::from)?;
         }
 
         if let Some(post_init) = target.post_init {
@@ -27,6 +30,6 @@ impl Switcher {
                 cmd.set_start_dir(&start_dir);
             }
         }
-        cmd.run().map_err(Error::from)
+        cmd.run().map_err(SwitchError::from)
     }
 }

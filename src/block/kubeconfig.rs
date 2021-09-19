@@ -1,8 +1,14 @@
-use crate::config::kubernetes::KubeconfigBlock;
-use crate::switch::block::error::Result;
+use crate::block::error::Result;
 use crate::switch::command::SwitcherCommand;
+use serde::{Deserialize, Serialize};
 
 const KUBECONFIG_ENV: &str = "KUBECONFIG";
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct KubeconfigBlock {
+    pub kubeconfig: String,
+}
 
 pub struct KubeconfigBlockHandler {}
 

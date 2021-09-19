@@ -2,6 +2,6 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct KubeconfigBlock {
-    pub kubeconfig: String,
+pub struct BuiltinPrompt {
+    pub prefix: String,
 }

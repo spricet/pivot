@@ -1,6 +1,6 @@
+use crate::prompt::Prompt;
 use crate::switch::command::bash::BashSwitcherCommand;
 use crate::switch::command::error::Result;
-use crate::config::Prompt;
 
 pub mod bash;
 pub mod error;

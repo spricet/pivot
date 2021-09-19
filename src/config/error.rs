@@ -1,9 +1,9 @@
 use thiserror::Error;
 
-pub type Result<T, E = Error> = std::result::Result<T, E>;
+pub type Result<T, E = ConfigError> = std::result::Result<T, E>;
 
 #[derive(Debug, Clone, Error)]
-pub enum Error {
+pub enum ConfigError {
     #[error("missing target {0}")]
     MissingTarget(String),
 }

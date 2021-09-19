@@ -1,7 +1,7 @@
-use crate::switch::command::error::{Error, Result};
+use crate::prompt::Prompt;
+use crate::switch::command::error::{CommandError, Result};
 use crate::switch::command::SwitcherCommand;
 use std::process::{Command, Stdio};
-use crate::config::Prompt;
 
 const BASH_PATH: &str = "/bin/bash";
 const PS1_OVERRIDE_ENV: &str = "PS1_OVERRIDE";
@@ -33,16 +33,15 @@ impl SwitcherCommand for BashSwitcherCommand {
     fn set_ps1(&mut self, target_name: &str, prompt: &Prompt) {
         let ps1 = match prompt {
             Prompt::Builtin(builtin) => {
-                format!("\\e[01;31m[{prefix}]{target}:\\e[01;34m\\w\\e[0m\\$ ", prefix = builtin.prefix, target = target_name)
+                format!(
+                    "\\e[01;31m[{prefix}]{target}:\\e[01;34m\\w\\e[0m\\$ ",
+                    prefix = builtin.prefix,
+                    target = target_name
+                )
             }
-            Prompt::Override(over) => {
-                over.prompt_override.clone()
-            }
+            Prompt::Override(over) => over.prompt_override.clone(),
         };
-        self.cmd.env(
-            PS1_OVERRIDE_ENV,
-            ps1
-        );
+        self.cmd.env(PS1_OVERRIDE_ENV, ps1);
     }
 
     fn set_start_dir(&mut self, start_dir: &str) {
@@ -57,11 +56,11 @@ impl SwitcherCommand for BashSwitcherCommand {
             .stdout(Stdio::inherit())
             .stderr(Stdio::inherit())
             .spawn()
-            .map_err(Error::from)?;
-        let status = child.wait().map_err(Error::from)?;
+            .map_err(CommandError::from)?;
+        let status = child.wait().map_err(CommandError::from)?;
         match status.success() {
             true => Ok(()),
-            false => Err(Error::ExitStatusError(status.code())),
+            false => Err(CommandError::ExitStatusError(status.code())),
         }
     }
 }
