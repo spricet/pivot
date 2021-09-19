@@ -1,7 +1,7 @@
+use crate::block::BlockHandlerFactory;
 use crate::config::v1alpha::Config;
 use crate::switch::command::SwitcherCommandFactory;
 use crate::switch::error::{Result, SwitchError};
-use crate::block::BlockHandlerFactory;
 
 pub struct Switcher {
     config: Config,
@@ -20,7 +20,7 @@ impl Switcher {
         let mut cmd = SwitcherCommandFactory::new_bash();
 
         for block in target.blocks.iter() {
-            let handler = BlockHandlerFactory::new(block);
+            let handler = BlockHandlerFactory::new_from_block(block);
             handler.handle(block, &mut cmd).map_err(SwitchError::from)?;
         }
 

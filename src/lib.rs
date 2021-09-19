@@ -4,3 +4,6 @@ pub mod pinit;
 pub mod prompt;
 pub mod switch;
 pub mod target;
+
+#[macro_use]
+extern crate lazy_static;

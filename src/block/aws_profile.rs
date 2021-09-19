@@ -1,7 +1,7 @@
 use crate::block::error::Result;
+use crate::block::{Block, BlockHandler};
 use crate::switch::command::SwitcherCommand;
 use serde::{Deserialize, Serialize};
-use crate::block::{BlockHandler, Block};
 
 const AWS_PROFILE_ENV: &str = "AWS_PROFILE";
 
@@ -15,7 +15,7 @@ pub struct AwsProfileBlockHandler {}
 
 impl AwsProfileBlockHandler {
     pub fn new() -> AwsProfileBlockHandler {
-        AwsProfileBlockHandler{}
+        AwsProfileBlockHandler {}
     }
 }
 

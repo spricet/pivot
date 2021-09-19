@@ -4,6 +4,7 @@ use crate::block::kubeconfig::{KubeconfigBlock, KubeconfigBlockHandler};
 use crate::switch::command::SwitcherCommand;
 use serde::{Deserialize, Serialize};
 
+pub mod aws_assume_role;
 pub mod aws_profile;
 pub mod error;
 pub mod kubeconfig;
@@ -12,6 +13,7 @@ pub mod kubeconfig;
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum Block {
     AwsProfile(AwsProfileBlock),
+    // AwsAssumeRole(),
     Kubeconfig(KubeconfigBlock),
 }
 
@@ -22,7 +24,7 @@ pub trait BlockHandler {
 pub struct BlockHandlerFactory;
 
 impl BlockHandlerFactory {
-    pub fn new(block: &Block) -> Box<dyn BlockHandler> {
+    pub fn new_from_block(block: &Block) -> Box<dyn BlockHandler> {
         match block {
             Block::AwsProfile(_) => Box::new(AwsProfileBlockHandler::new()),
             Block::Kubeconfig(_) => Box::new(KubeconfigBlockHandler::new()),

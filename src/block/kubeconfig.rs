@@ -1,7 +1,7 @@
 use crate::block::error::Result;
+use crate::block::{Block, BlockHandler};
 use crate::switch::command::SwitcherCommand;
 use serde::{Deserialize, Serialize};
-use crate::block::{BlockHandler, Block};
 
 const KUBECONFIG_ENV: &str = "KUBECONFIG";
 
@@ -15,7 +15,7 @@ pub struct KubeconfigBlockHandler {}
 
 impl KubeconfigBlockHandler {
     pub fn new() -> KubeconfigBlockHandler {
-        KubeconfigBlockHandler{}
+        KubeconfigBlockHandler {}
     }
 }
 
