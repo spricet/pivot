@@ -1,4 +1,5 @@
 pub mod config;
+pub mod switch;
 
 #[cfg(test)]
 mod tests {

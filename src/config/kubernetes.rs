@@ -1,7 +1,7 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct KubeconfigBlock {
-    kubeconfig: String,
+    pub kubeconfig: String,
 }
