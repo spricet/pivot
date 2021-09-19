@@ -10,9 +10,6 @@ pub enum Error {
     #[error("block error: {0}")]
     BlockError(#[from] crate::switch::block::error::Error),
 
-    #[error("io error: {0}")]
-    IOError(#[from] std::io::Error),
-
-    #[error("exit status error: status code: {0:?}")]
-    ExitStatusError(Option<i32>),
+    #[error("command error: {0}")]
+    CommandError(#[from] crate::switch::command::error::Error),
 }

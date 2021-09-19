@@ -30,7 +30,7 @@ fn main() {
     };
     let switcher = Switcher::new(cfg);
     match switcher.switch(&opts.target) {
-        Ok(_) => {},
+        Ok(_) => {}
         Err(e) => println!("command failed: {:?}", e),
     }
 }
