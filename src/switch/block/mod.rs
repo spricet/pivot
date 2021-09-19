@@ -2,7 +2,7 @@ use crate::config::Block;
 use crate::switch::block::aws_profile::AwsProfileBlockHandler;
 use crate::switch::block::error::Result;
 use crate::switch::block::kubeconfig::KubeconfigBlockHandler;
-use std::process::Command;
+use crate::switch::command::SwitcherCommand;
 
 pub mod aws_profile;
 pub mod error;
@@ -21,7 +21,7 @@ impl BlockHandler {
         }
     }
 
-    pub fn handle(&self, block: &Block, cmd: &mut Command) -> Result<()> {
+    pub fn handle(&self, block: &Block, cmd: &mut Box<dyn SwitcherCommand>) -> Result<()> {
         match self {
             BlockHandler::AwsProfile(aws) => {
                 if let Block::AwsProfile(ablock) = block {
