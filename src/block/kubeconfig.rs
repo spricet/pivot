@@ -1,9 +1,8 @@
-use crate::block::error::{Result, BlockError};
+use crate::block::error::Result;
 use crate::block::{Block, BlockHandler};
 use crate::switch::command::SwitcherCommand;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use crate::switch::command::expand;
 
 const KUBECONFIG_ENV: &str = "KUBECONFIG";
 
@@ -31,9 +30,10 @@ impl Default for KubeconfigBlockHandler {
 impl BlockHandler for KubeconfigBlockHandler {
     fn handle(&self, block: &Block, cmd: &mut Box<dyn SwitcherCommand>) -> Result<()> {
         if let Block::Kubeconfig(kblock) = block {
-            let path = expand::expand_path(&kblock.kubeconfig)
-                .map_err(BlockError::from)?;
-            cmd.env(KUBECONFIG_ENV, &path);
+            cmd.env(
+                KUBECONFIG_ENV,
+                &shellexpand::tilde(&kblock.kubeconfig).to_string(),
+            );
         }
         Ok(())
     }

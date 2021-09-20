@@ -18,12 +18,14 @@ fn main() {
     let opts: PivotOpt = PivotOpt::from_args();
     let cfg_path = match opts.cfg_path {
         Some(p) => p,
-        None => PathBuf::from(std::env::var("HOME").expect("missing HOME env")).join(DEFAULT_PIVOT_CONFIG_PATH),
+        None => PathBuf::from(std::env::var("HOME").expect("missing HOME env"))
+            .join(DEFAULT_PIVOT_CONFIG_PATH),
     };
 
     let p = cfg_path.clone();
     let p = p.to_string_lossy();
-    let file = File::open(cfg_path).unwrap_or_else(|_| panic!("unable to open pivot config: {}", p));
+    let file =
+        File::open(cfg_path).unwrap_or_else(|_| panic!("unable to open pivot config: {}", p));
     let cfg: Config = serde_yaml::from_reader(file)
         .unwrap_or_else(|e| panic!("failed to parse pivot config: {} - {}", p, e));
     if let Err(e) = cfg.validate() {
