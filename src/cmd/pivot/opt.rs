@@ -1,8 +1,6 @@
 use std::path::PathBuf;
 use structopt::StructOpt;
 
-// const DEFAULT_PIVOT_CONFIG_PATH: &str = ".config/pivot/config.yaml";
-
 #[derive(Debug, StructOpt)]
 #[structopt(name = "pivot")]
 pub struct PivotOpt {

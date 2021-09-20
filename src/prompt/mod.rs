@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use validator::{Validate, ValidationErrors};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "type", rename_all = "camelCase")]
+#[serde(tag = "type", rename_all = "PascalCase")]
 pub enum Prompt {
     Builtin(BuiltinPrompt),
     Override(OverridePrompt),

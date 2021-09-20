@@ -11,7 +11,7 @@ pub mod error;
 pub mod kubeconfig;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "type", rename_all = "camelCase")]
+#[serde(tag = "type", rename_all = "PascalCase")]
 pub enum Block {
     AwsProfile(AwsProfileBlock),
     // AwsAssumeRole(),

@@ -1,10 +1,10 @@
-apiVersion: v1alpha
+apiVersion: v1
 targets:
   - name: my-target
     blocks:
-      - type: aws_profile
+      - type: AwsProfile
         profile: my-profile
-      - type: kubeconfig
+      - type: Kubeconfig
         kubeconfig: ~/.kube/config
     env:
       CUSTOM_ENV: value
