@@ -7,7 +7,7 @@ Add the following to your `~/.bashrc`
 if [ ! -z "$PIVOT_PS1" ]; then
     PS1="$PIVOT_PS1"
 fi
-if [ ! -z "$PIVTO_START_DIR" ]; then
+if [ ! -z "$PIVOT_START_DIR" ]; then
     cd $(eval "ls -d $PIVOT_START_DIR")
 fi
 ### End Pivot ###
