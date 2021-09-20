@@ -1,11 +1,13 @@
 use crate::prompt::Prompt;
 use crate::switch::command::error::{CommandError, Result};
-use crate::switch::command::SwitcherCommand;
+use crate::switch::command::{SwitcherCommand, PIVOT_PS1_ENV, PIVOT_START_DIR_ENV};
 use std::process::{Command, Stdio};
 
 const BASH_PATH: &str = "/bin/bash";
-const PS1_OVERRIDE_ENV: &str = "PS1_OVERRIDE";
-const START_DIR_ENV: &str = "START_DIR";
+// const BASHRC_PATH: &str = ".bashrc";
+// const HOME_ENV: &str = "HOME";
+// const BASHRC_MARKER: &str = "### Pivot ###";
+// const BASHRC_END_MARKER: &str = "### End Pivot ###";
 
 pub struct BashSwitcherCommand {
     cmd: Command,
@@ -41,11 +43,11 @@ impl SwitcherCommand for BashSwitcherCommand {
             }
             Prompt::Override(over) => over.prompt_override.clone(),
         };
-        self.cmd.env(PS1_OVERRIDE_ENV, ps1);
+        self.cmd.env(PIVOT_PS1_ENV, ps1);
     }
 
     fn set_start_dir(&mut self, start_dir: &str) {
-        self.cmd.env(START_DIR_ENV, start_dir);
+        self.cmd.env(PIVOT_START_DIR_ENV, start_dir);
     }
 
     fn run(&mut self) -> Result<()> {
@@ -64,3 +66,33 @@ impl SwitcherCommand for BashSwitcherCommand {
         }
     }
 }
+
+
+/*
+pub fn configure_bash_rc() -> Result<()> {
+    let bashrc = get_bashrc_path();
+    if !bashrc.exists() {
+        println!("warning '~/{}' doesn't exist, skipping bashrc configuration", BASHRC_PATH);
+        return Ok(())
+    }
+    let bashrc = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(bashrc)
+        .map_err(CommandError::from)?;
+    let mut buf_reader = BufReader::new(file);
+    let mut contents = String::new();
+    buf_reader.read_to_string(&mut contents)
+        .map_err(CommandError::from)?;
+
+    if contents.contains(BASHRC_MARKER) {
+    } else {
+    }
+    Ok(())
+}
+
+fn get_bashrc_path() -> PathBuf {
+    PathBuf::from(std::env::var(HOME_ENV).unwrap_or_default())
+        .join(BASHRC_PATH)
+}
+*/

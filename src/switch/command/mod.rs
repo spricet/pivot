@@ -5,6 +5,9 @@ use crate::switch::command::error::Result;
 pub mod bash;
 pub mod error;
 
+const PIVOT_PS1_ENV: &str = "PIVOT_PS1";
+const PIVOT_START_DIR_ENV: &str = "PIVOT_START_DIR";
+
 pub trait SwitcherCommand {
     fn env(&mut self, key: &str, val: &str);
     fn set_ps1(&mut self, target_name: &str, prompt: &Prompt);
