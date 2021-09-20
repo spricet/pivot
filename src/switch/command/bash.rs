@@ -36,7 +36,7 @@ impl SwitcherCommand for BashSwitcherCommand {
         let ps1 = match prompt {
             Prompt::Builtin(builtin) => {
                 format!(
-                    "\\e[01;31m[{prefix}]{target}:\\e[01;34m\\w\\e[0m\\$ ",
+                    "\\[\\e[01;31m\\][{prefix}]{target}:\\[\\e[01;34m\\]\\w\\[\\e[0m\\]\\$ ",
                     prefix = builtin.prefix,
                     target = target_name
                 )
