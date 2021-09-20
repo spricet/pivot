@@ -13,6 +13,7 @@ lazy_static! {
 pub struct Config {
     #[validate(regex = "RE_API_VERSION")]
     pub api_version: String,
+    #[validate]
     pub targets: Vec<Target>,
 }
 
@@ -29,10 +30,10 @@ impl Config {
 
 #[cfg(test)]
 mod tests {
-    use crate::config::v1alpha::Config;
     use crate::config::error::ConfigError;
-    use validator::Validate;
+    use crate::config::v1alpha::Config;
     use crate::target::Target;
+    use validator::Validate;
 
     #[test]
     fn test_validation() {
@@ -54,11 +55,11 @@ mod tests {
         let target_name = "my-target";
         let c = Config {
             api_version: "v1".to_string(),
-            targets: vec![Target{
+            targets: vec![Target {
                 name: target_name.to_string(),
                 blocks: vec![],
                 env: Default::default(),
-                post_init: None
+                post_init: None,
             }],
         };
         assert!(c.get_target(target_name).is_ok());

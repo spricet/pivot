@@ -3,6 +3,7 @@ use crate::block::error::Result;
 use crate::block::kubeconfig::{KubeconfigBlock, KubeconfigBlockHandler};
 use crate::switch::command::SwitcherCommand;
 use serde::{Deserialize, Serialize};
+use validator::{Validate, ValidationErrors};
 
 pub mod aws_assume_role;
 pub mod aws_profile;
@@ -15,6 +16,15 @@ pub enum Block {
     AwsProfile(AwsProfileBlock),
     // AwsAssumeRole(),
     Kubeconfig(KubeconfigBlock),
+}
+
+impl Validate for Block {
+    fn validate(&self) -> std::result::Result<(), ValidationErrors> {
+        match self {
+            Block::AwsProfile(a) => a.validate(),
+            Block::Kubeconfig(k) => k.validate(),
+        }
+    }
 }
 
 pub trait BlockHandler {
