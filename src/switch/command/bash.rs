@@ -2,6 +2,7 @@ use crate::prompt::Prompt;
 use crate::switch::command::error::{CommandError, Result};
 use crate::switch::command::{SwitcherCommand, PIVOT_PS1_ENV, PIVOT_START_DIR_ENV};
 use std::process::{Command, Stdio};
+use crate::switch::command::expand;
 
 const BASH_PATH: &str = "/bin/bash";
 // const BASHRC_PATH: &str = ".bashrc";
@@ -47,7 +48,14 @@ impl SwitcherCommand for BashSwitcherCommand {
     }
 
     fn set_start_dir(&mut self, start_dir: &str) {
-        self.cmd.env(PIVOT_START_DIR_ENV, start_dir);
+        match expand::expand_path(start_dir) {
+            Ok(path) => {
+                self.cmd.env(PIVOT_START_DIR_ENV, path);
+            },
+            Err(e) => {
+                println!("warning: could not expand start_dir: {} - {:?}", start_dir, e);
+            }
+        }
     }
 
     fn run(&mut self) -> Result<()> {

@@ -1,8 +1,9 @@
-use crate::block::error::Result;
+use crate::block::error::{Result, BlockError};
 use crate::block::{Block, BlockHandler};
 use crate::switch::command::SwitcherCommand;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
+use crate::switch::command::expand;
 
 const KUBECONFIG_ENV: &str = "KUBECONFIG";
 
@@ -30,7 +31,9 @@ impl Default for KubeconfigBlockHandler {
 impl BlockHandler for KubeconfigBlockHandler {
     fn handle(&self, block: &Block, cmd: &mut Box<dyn SwitcherCommand>) -> Result<()> {
         if let Block::Kubeconfig(kblock) = block {
-            cmd.env(KUBECONFIG_ENV, &kblock.kubeconfig);
+            let path = expand::expand_path(&kblock.kubeconfig)
+                .map_err(BlockError::from)?;
+            cmd.env(KUBECONFIG_ENV, &path);
         }
         Ok(())
     }
@@ -72,7 +75,7 @@ mod tests {
     #[test]
     fn test_kubeconfig_env_set() {
         let k = Block::Kubeconfig(KubeconfigBlock {
-            kubeconfig: "asdf".to_string(),
+            kubeconfig: "src".to_string(),
         });
         let h = KubeconfigBlockHandler::default();
 
@@ -84,7 +87,7 @@ mod tests {
         assert!(res.is_ok());
         {
             let e = env.lock().unwrap();
-            assert_eq!(e.get(KUBECONFIG_ENV).unwrap().clone(), "asdf")
+            assert_eq!(e.get(KUBECONFIG_ENV).unwrap().clone(), "src")
         }
     }
 }

@@ -23,9 +23,9 @@ fn main() {
 
     let p = cfg_path.clone();
     let p = p.to_string_lossy();
-    let file = File::open(cfg_path).expect(format!("unable to open pivot config: {}", p).as_ref());
+    let file = File::open(cfg_path).unwrap_or_else(|_| panic!("unable to open pivot config: {}", p));
     let cfg: Config = serde_yaml::from_reader(file)
-        .expect(format!("failed to parse pivot config: {}", p).as_ref());
+        .unwrap_or_else(|e| panic!("failed to parse pivot config: {} - {}", p, e));
     if let Err(e) = cfg.validate() {
         println!("invalid pivot config: {} - {}", p, e);
         exit(1);

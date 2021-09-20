@@ -4,6 +4,7 @@ use crate::switch::command::error::Result;
 
 pub mod bash;
 pub mod error;
+pub mod expand;
 
 const PIVOT_PS1_ENV: &str = "PIVOT_PS1";
 const PIVOT_START_DIR_ENV: &str = "PIVOT_START_DIR";
