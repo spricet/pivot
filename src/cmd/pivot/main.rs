@@ -1,3 +1,6 @@
+use fern::colors::{Color, ColoredLevelConfig};
+use fern::Dispatch;
+use log::LevelFilter;
 use std::fs::File;
 use std::path::PathBuf;
 use std::process::exit;
@@ -14,8 +17,9 @@ mod opt;
 
 const DEFAULT_PIVOT_CONFIG_PATH: &str = ".config/pivot/config.yaml";
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opts: PivotOpt = PivotOpt::from_args();
+    setup_logging(opts.verbose)?;
     let cfg_path = match opts.cfg_path {
         Some(p) => p,
         None => PathBuf::from(std::env::var("HOME").expect("missing HOME env"))
@@ -34,8 +38,34 @@ fn main() {
     }
 
     let switcher = Switcher::new(cfg);
-    match switcher.switch(&opts.target) {
-        Ok(_) => {}
-        Err(e) => println!("command failed: {:?}", e),
-    }
+    switcher.switch(&opts.target)?;
+    Ok(())
+}
+
+fn setup_logging(verbose: bool) -> Result<(), fern::InitError> {
+    let colors = ColoredLevelConfig::new()
+        .error(Color::Red)
+        .warn(Color::Yellow)
+        .info(Color::BrightGreen)
+        .debug(Color::Cyan)
+        .trace(Color::BrightBlack);
+
+    let level = match verbose {
+        true => LevelFilter::Debug,
+        false => LevelFilter::Info,
+    };
+    Dispatch::new()
+        .level(level)
+        .level_for("pivot", level)
+        .chain(std::io::stderr())
+        .format(move |out, message, record| {
+            out.finish(format_args!(
+                "[{}] {}",
+                colors.color(record.level()),
+                message,
+            ))
+        })
+        .apply()?;
+
+    Ok(())
 }

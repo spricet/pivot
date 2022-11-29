@@ -36,6 +36,7 @@ impl Default for AwsProfileBlockHandler {
 impl BlockHandler for AwsProfileBlockHandler {
     fn handle(&self, block: &Block, cmd: &mut Box<dyn SwitcherCommand>) -> Result<()> {
         if let Block::AwsProfile(ablock) = block {
+            log::debug!("setting AWS_PROFILE={}", &ablock.profile);
             cmd.env(AWS_PROFILE_ENV, &ablock.profile);
         }
         Ok(())
@@ -97,8 +98,8 @@ mod tests {
         });
         let h = AwsProfileBlockHandler::default();
 
-        let mut env: Arc<Mutex<HashMap<String, String>>> = Arc::new(Mutex::new(HashMap::new()));
-        let cmd = MockSwitcherCommand::new(Arc::clone(&mut env));
+        let env: Arc<Mutex<HashMap<String, String>>> = Arc::new(Mutex::new(HashMap::new()));
+        let cmd = MockSwitcherCommand::new(Arc::clone(&env));
         let mut boxed = Box::new(cmd) as Box<dyn SwitcherCommand>;
         let res = h.handle(&b, &mut boxed);
 

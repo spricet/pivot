@@ -30,10 +30,7 @@ impl Default for KubeconfigBlockHandler {
 impl BlockHandler for KubeconfigBlockHandler {
     fn handle(&self, block: &Block, cmd: &mut Box<dyn SwitcherCommand>) -> Result<()> {
         if let Block::Kubeconfig(kblock) = block {
-            cmd.env(
-                KUBECONFIG_ENV,
-                &shellexpand::tilde(&kblock.kubeconfig).to_string(),
-            );
+            cmd.env(KUBECONFIG_ENV, &shellexpand::tilde(&kblock.kubeconfig));
         }
         Ok(())
     }
@@ -79,8 +76,8 @@ mod tests {
         });
         let h = KubeconfigBlockHandler::default();
 
-        let mut env: Arc<Mutex<HashMap<String, String>>> = Arc::new(Mutex::new(HashMap::new()));
-        let cmd = MockSwitcherCommand::new(Arc::clone(&mut env));
+        let env: Arc<Mutex<HashMap<String, String>>> = Arc::new(Mutex::new(HashMap::new()));
+        let cmd = MockSwitcherCommand::new(Arc::clone(&env));
         let mut boxed = Box::new(cmd) as Box<dyn SwitcherCommand>;
         let res = h.handle(&k, &mut boxed);
 
